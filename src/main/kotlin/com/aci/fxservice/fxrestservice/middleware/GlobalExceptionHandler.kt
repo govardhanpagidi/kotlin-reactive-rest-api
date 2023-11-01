@@ -13,9 +13,4 @@ class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("an error occurred: ${e.message}")
     }
 
-    @ExceptionHandler(ResponseStatusException::class)
-    fun handleResponseStatusExceptions(e: ResponseStatusException): ResponseEntity<String> {
-        return ResponseEntity.status(e.statusCode).body(e.reason)
-    }
-
 }

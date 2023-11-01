@@ -11,6 +11,8 @@ import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
 import com.aci.fxservice.fxrestservice.util.generateRandomLongId
 import com.aci.fxservice.fxrestservice.util.getCurrentEpochTime
+import org.springframework.http.HttpStatus
+import org.springframework.web.server.ResponseStatusException
 
 @Service
 class InstitutionService(
@@ -44,11 +46,17 @@ class InstitutionService(
         logger.logInfo("Received request to save institution: $institutionRequest")
         // logic to convert the currency
         // get the exchange rates
-        return exchangeRateRepository.findFxRateDataByBasecurrencyAndCurrency(institutionRequest.sourceCurrency, institutionRequest.targetCurrency)
-            .doOnNext { value ->
-                // Log or print the data emitted by findFxRateDataByBaseCurrencyAndCurrency
-                logger.logInfo("Received value: $value")
-            }
+        val result = exchangeRateRepository.findFxRateDataByBasecurrencyAndCurrency(institutionRequest.sourceCurrency, institutionRequest.targetCurrency)
+            .switchIfEmpty(
+                Mono.error(
+                    ResponseStatusException(
+                        HttpStatus.BAD_REQUEST,
+                        "Unable to find exchange rate for ${institutionRequest.sourceCurrency} to ${institutionRequest.targetCurrency}"
+                    )
+                )
+            )
+
+        return result
             .flatMap { value ->
                     // Process the value and return the resulting Mono
                      val rate = value.buyrate
