@@ -1,7 +1,7 @@
 package com.aci.fxservice.fxrestservice.controller
 
-import com.aci.fxservice.fxrestservice.entity.Institution
-import com.aci.fxservice.fxrestservice.model.dto.InstitutionResponse
+import com.aci.fxservice.fxrestservice.logging.ILogger
+import com.aci.fxservice.fxrestservice.model.response.InstitutionResponse
 import com.aci.fxservice.fxrestservice.model.request.InstitutionRequest
 import com.aci.fxservice.fxrestservice.service.InstitutionService
 import org.springframework.web.bind.annotation.GetMapping
@@ -19,13 +19,14 @@ class InstitutionController (
         private val institutionService: InstitutionService
 ){
     @GetMapping
-    fun findAll() : Flux<InstitutionResponse> = institutionService.findAll()
+    fun findAll() : Flux<InstitutionResponse> = institutionService.findInstitutions()
 
     @GetMapping("/{id}")
-    fun findById(@PathVariable id:Long) : Mono<InstitutionResponse> = institutionService.findById(id)
+    fun findInstitutionById(@PathVariable id:Long) : Mono<InstitutionResponse> = institutionService.findInstitutionById(id)
 
     @PostMapping
-    fun save(@RequestBody institutionRequest : InstitutionRequest) : Mono<InstitutionResponse> {
-        return institutionService.save(institutionRequest)
+    fun saveInstitution(@RequestBody institutionRequest : InstitutionRequest) : Mono<InstitutionResponse> {
+        //logger.info("Received request to save institution: $institutionRequest")
+        return institutionService.saveInstitution(institutionRequest)
     }
 }

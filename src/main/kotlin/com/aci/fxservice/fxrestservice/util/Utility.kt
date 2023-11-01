@@ -5,3 +5,7 @@ import kotlin.random.Random
 fun generateRandomLongId(): Long {
     return Random.nextLong(Long.MAX_VALUE)
 }
+
+fun getCurrentEpochTime() : Long{
+    return System.currentTimeMillis();
+}
