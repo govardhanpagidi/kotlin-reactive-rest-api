@@ -3,10 +3,9 @@ package com.aci.fxservice.fxrestservice.entity
 import org.springframework.data.annotation.Id
 import org.springframework.data.mongodb.core.mapping.Document
 //import org.springframework.data.relational.core.mapping.Table
-import java.util.Date
 
-@Document(collection = "institution")
-data class Institution(
+@Document
+data class Conversion(
         @Id
         val institutionId: Long,
         val sourceCurrency: String,

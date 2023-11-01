@@ -1,5 +1,5 @@
 package com.aci.fxservice.fxrestservice.model.response
-data class InstitutionResponse  (
+data class ConversionResponse  (
         var id : Long? = null,
         val actualAmount: Double,
         val convertedAmount: Double? = null,

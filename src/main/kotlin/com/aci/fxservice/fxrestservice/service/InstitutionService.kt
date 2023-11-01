@@ -1,9 +1,9 @@
 package com.aci.fxservice.fxrestservice.service
 
-import com.aci.fxservice.fxrestservice.entity.Institution
+import com.aci.fxservice.fxrestservice.entity.Conversion
 import com.aci.fxservice.fxrestservice.logging.ILogger
-import com.aci.fxservice.fxrestservice.model.response.InstitutionResponse
-import com.aci.fxservice.fxrestservice.model.request.InstitutionRequest
+import com.aci.fxservice.fxrestservice.model.response.ConversionResponse
+import com.aci.fxservice.fxrestservice.model.request.ConversionRequest
 import com.aci.fxservice.fxrestservice.repository.FxRateDataRepository
 import com.aci.fxservice.fxrestservice.repository.InstitutionRepository
 import org.springframework.stereotype.Service
@@ -21,7 +21,7 @@ class InstitutionService(
     private val logger: ILogger,
 ) {
     // find all institutions
-    fun findInstitutions() : Flux<InstitutionResponse> {
+    fun findInstitutions() : Flux<ConversionResponse> {
         logger.logInfo("Received request to find all institutions")
         // convert to dto after findAll
         return institutionRepository
@@ -32,7 +32,7 @@ class InstitutionService(
     }
 
     // find institution by id
-    fun findInstitutionById(id: Long) : Mono<InstitutionResponse> {
+    fun findInstitutionById(id: Long) : Mono<ConversionResponse> {
         logger.logInfo("Received request to find institution by id: $id")
         // convert to dto after find
         return institutionRepository.findById(id)
@@ -42,7 +42,7 @@ class InstitutionService(
     }
 
     // create institution
-    fun saveInstitution(institutionRequest: InstitutionRequest) : Mono<InstitutionResponse >{
+    fun saveInstitution(institutionRequest: ConversionRequest) : Mono<ConversionResponse >{
         logger.logInfo("Received request to save institution: $institutionRequest")
         // logic to convert the currency
         // get the exchange rates
@@ -69,7 +69,7 @@ class InstitutionService(
                     )
 
                     institutionRepository.save(
-                        Institution(
+                        Conversion(
                             institutionId = generateRandomLongId(),
                             sourceCurrency = institutionRequest.sourceCurrency,
                             targetCurrency = institutionRequest.targetCurrency,
@@ -111,9 +111,9 @@ class InstitutionService(
         }
     }
 }
-fun mapToInstitutionResponse(institution: Institution): InstitutionResponse {
+fun mapToInstitutionResponse(institution: Conversion): ConversionResponse {
 
-    return InstitutionResponse(
+    return ConversionResponse(
         institution.institutionId,
         institution.amount,
         institution.targetAmount,
