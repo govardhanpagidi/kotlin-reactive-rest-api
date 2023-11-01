@@ -46,12 +46,12 @@ class InstitutionService(
         logger.logInfo("Received request to save institution: $institutionRequest")
         // logic to convert the currency
         // get the exchange rates
-        val result = exchangeRateRepository.findFxRateDataByBaseCurrencyAndCurrency(institutionRequest.sourceCurrency, institutionRequest.targetCurrency)
+        val result = exchangeRateRepository.findFxRateDataByBaseCurrencyAndCurrency(institutionRequest.fromCurrency, institutionRequest.toCurrency)
             .switchIfEmpty(
                 Mono.error(
                     ResponseStatusException(
                         HttpStatus.BAD_REQUEST,
-                        "Unable to find exchange rate for ${institutionRequest.sourceCurrency} to ${institutionRequest.targetCurrency}"
+                        "Unable to find exchange rate for ${institutionRequest.fromCurrency} to ${institutionRequest.toCurrency}"
                     )
                 )
             )
@@ -63,16 +63,16 @@ class InstitutionService(
                 logger.logInfo("Rate: $rate")
                     val targetAmount = convertCurrency(
                             institutionRequest.amount,
-                            institutionRequest.sourceCurrency,
-                            institutionRequest.targetCurrency,
+                            institutionRequest.fromCurrency,
+                            institutionRequest.toCurrency,
                             mapOf(Pair(value.baseCurrency, value.currency) to value.buyRate)
                     )
 
                     institutionRepository.save(
                         Conversion(
                             institutionId = generateRandomLongId(),
-                            sourceCurrency = institutionRequest.sourceCurrency,
-                            targetCurrency = institutionRequest.targetCurrency,
+                            sourceCurrency = institutionRequest.fromCurrency,
+                            targetCurrency = institutionRequest.toCurrency,
                             amount = institutionRequest.amount,
                             targetAmount = targetAmount,
                             rate = rate,
