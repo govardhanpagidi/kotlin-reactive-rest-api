@@ -6,17 +6,15 @@ import org.springframework.data.mongodb.core.mapping.Document
 @Document(collection = "fxratedata")
 data class FxRateData(
         @Id
-        val tenantid: String?,  //  Unique and Not Null
-        val bankid: String?,   // Unique and Not Null
-        val basecurrency: String,
+        val tenantId: String?,  //  Unique and Not Null
+        val bankId: String?,   // Unique and Not Null
+        val baseCurrency: String,
         val tier: String?,
         val currency: String,
-        val directflag: Boolean?,
+        val directFlag: Boolean?,
         val multiplier: Int?,
-        val buyrate: Double,
-        val sellrate: Double,
-        val tolerancepercentage: Float?,
-        val effectivedate: Date?,
-        val expirationdate: Date?,
+        val buyRate: Double,
+        val sellRate: Double,
         val contractRequirementThreshold: String?
 )
+

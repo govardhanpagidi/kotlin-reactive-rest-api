@@ -5,5 +5,5 @@ import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
 import reactor.core.publisher.Mono
 
 interface FxRateDataRepository : ReactiveMongoRepository<FxRateData, Long>{
-    fun findFxRateDataByBasecurrencyAndCurrency(baseCurrency: String, currency: String): Mono<FxRateData>
+    fun findFxRateDataByBaseCurrencyAndCurrency(baseCurrency: String, currency: String): Mono<FxRateData>
 }

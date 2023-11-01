@@ -46,7 +46,7 @@ class InstitutionService(
         logger.logInfo("Received request to save institution: $institutionRequest")
         // logic to convert the currency
         // get the exchange rates
-        val result = exchangeRateRepository.findFxRateDataByBasecurrencyAndCurrency(institutionRequest.sourceCurrency, institutionRequest.targetCurrency)
+        val result = exchangeRateRepository.findFxRateDataByBaseCurrencyAndCurrency(institutionRequest.sourceCurrency, institutionRequest.targetCurrency)
             .switchIfEmpty(
                 Mono.error(
                     ResponseStatusException(
@@ -59,27 +59,24 @@ class InstitutionService(
         return result
             .flatMap { value ->
                     // Process the value and return the resulting Mono
-                     val rate = value.buyrate
+                     val rate = value.buyRate
                 logger.logInfo("Rate: $rate")
                     val targetAmount = convertCurrency(
                             institutionRequest.amount,
                             institutionRequest.sourceCurrency,
                             institutionRequest.targetCurrency,
-                            mapOf(Pair(value.basecurrency, value.currency) to value.buyrate)
+                            mapOf(Pair(value.baseCurrency, value.currency) to value.buyRate)
                     )
 
                     institutionRepository.save(
                         Institution(
                             institutionId = generateRandomLongId(),
-                            profileid = institutionRequest.profileId,
-                            tenantid = institutionRequest.tenantId,
-                            bankid = institutionRequest.bankId,
-                            sourcecurrency = institutionRequest.sourceCurrency,
-                            targetcurrency = institutionRequest.targetCurrency,
+                            sourceCurrency = institutionRequest.sourceCurrency,
+                            targetCurrency = institutionRequest.targetCurrency,
                             amount = institutionRequest.amount,
-                            targetamount = targetAmount,
+                            targetAmount = targetAmount,
                             rate = rate,
-                            initiatedon = getCurrentEpochTime(),
+                            initiatedOn = getCurrentEpochTime(),
                             status = "Initiated",
                             reason = "Initiated by user",
                         ))
@@ -88,7 +85,6 @@ class InstitutionService(
                         }
                 }
                 .onErrorMap { error ->
-                    // TODO: Log the error
                     logger.logError("error: ${error.message}")
                     Exception("Error occurred: ${error.message}")
                 }
@@ -116,13 +112,14 @@ class InstitutionService(
     }
 }
 fun mapToInstitutionResponse(institution: Institution): InstitutionResponse {
+
     return InstitutionResponse(
-        generateRandomLongId(),
+        institution.institutionId,
         institution.amount,
-        institution.targetamount,
-        institution.sourcecurrency,
-        institution.targetcurrency,
-        institution.initiatedon,
+        institution.targetAmount,
+        institution.sourceCurrency,
+        institution.targetCurrency,
+        institution.initiatedOn,
         institution.rate
     )
 }

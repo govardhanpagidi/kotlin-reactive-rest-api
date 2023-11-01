@@ -19,10 +19,8 @@ repositories {
 }
 
 dependencies {
-	implementation ("org.apache.logging.log4j:log4j-api:2.14.1" )// Use the latest version
-	implementation ("org.apache.logging.log4j:log4j-core:2.14.1")// Use the same version as log4j-api
-	implementation("org.springdoc:springdoc-openapi-ui:1.5.12") // Springdoc OpenAPI - ReDoc will be bundled with this
-	implementation("org.springdoc:springdoc-openapi-webflux-ui:1.5.12") // If you're using WebFlux for reactive APIs
+	implementation ("org.apache.logging.log4j:log4j-api:2.14.1" )
+	implementation ("org.apache.logging.log4j:log4j-core:2.14.1")
 	implementation("org.springframework.boot:spring-boot-starter-data-r2dbc")
 	implementation("org.springframework.boot:spring-boot-starter-data-mongodb-reactive")
 	implementation("org.springframework.boot:spring-boot-starter-webflux")
