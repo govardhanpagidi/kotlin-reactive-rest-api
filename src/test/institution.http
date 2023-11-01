@@ -1,0 +1,2 @@
+### Base URL for the Realm REST APIs.
+@baseURL = http://localhost:8080/institutions

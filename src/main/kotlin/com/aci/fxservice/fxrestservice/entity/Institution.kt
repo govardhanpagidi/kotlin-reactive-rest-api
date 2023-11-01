@@ -1,12 +1,14 @@
 package com.aci.fxservice.fxrestservice.entity
 
 import org.springframework.data.annotation.Id
-import org.springframework.data.relational.core.mapping.Table
+import org.springframework.data.mongodb.core.mapping.Document
+//import org.springframework.data.relational.core.mapping.Table
 import java.util.Date
 
-@Table
+@Document(collection = "institution")
 data class Institution(
-        @Id val id : Long? = null,
+        @Id
+        val institutionId: Long,
         val profileid: String,
         val tenantid: String,
         val bankid: String,

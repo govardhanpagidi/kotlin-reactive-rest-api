@@ -3,3 +3,8 @@ spring:
     url: r2dbc:postgresql://localhost:5432/
     username: postgres
     password: postgres
+  data:
+    mongodb:
+      host: localhost
+      port: 27017
+      database: fxdb

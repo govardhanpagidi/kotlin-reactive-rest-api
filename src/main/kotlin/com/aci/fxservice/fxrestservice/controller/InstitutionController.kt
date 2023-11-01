@@ -24,10 +24,6 @@ class InstitutionController (
     @GetMapping("/{id}")
     fun findById(@PathVariable id:Long) : Mono<InstitutionResponse> = institutionService.findById(id)
 
-    @GetMapping("/inst/{id}")
-    fun findInstitutionById(@PathVariable id:Long) : Mono<Institution> = institutionService.findInstitutionById(id)
-
-
     @PostMapping
     fun save(@RequestBody institutionRequest : InstitutionRequest) : Mono<InstitutionResponse> {
         return institutionService.save(institutionRequest)
