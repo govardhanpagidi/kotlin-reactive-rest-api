@@ -5,7 +5,7 @@
       * GET /conversions/{id}
       * GET /conversions
         * POST /conversions
-          *   Request Body:
+          Request Body:
           ```json
           {
               "fromCurrency" : "EUR",
