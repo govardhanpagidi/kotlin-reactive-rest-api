@@ -2,7 +2,7 @@ package com.aci.fxservice.fxrestservice.controller
 
 import com.aci.fxservice.fxrestservice.model.response.ConversionResponse
 import com.aci.fxservice.fxrestservice.model.request.ConversionRequest
-import com.aci.fxservice.fxrestservice.service.InstitutionService
+import com.aci.fxservice.fxrestservice.service.ConversionService
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
@@ -15,16 +15,16 @@ import reactor.core.publisher.Mono
 @RestController
 @RequestMapping("/conversions")
 class ConversionController (
-        private val institutionService: InstitutionService
+        private val conversionService: ConversionService
 ){
     @GetMapping
-    fun findAll() : Flux<ConversionResponse> = institutionService.findInstitutions()
+    fun findAll() : Flux<ConversionResponse> = conversionService.findConversions()
 
     @GetMapping("/{id}")
-    fun findInstitutionById(@PathVariable id:Long) : Mono<ConversionResponse> = institutionService.findInstitutionById(id)
+    fun findConversionById(@PathVariable id:Long) : Mono<ConversionResponse> = conversionService.findConversionById(id)
 
     @PostMapping
-    fun saveInstitution(@RequestBody institutionRequest : ConversionRequest) : Mono<ConversionResponse> {
-        return institutionService.saveInstitution(institutionRequest)
+    fun saveConversion(@RequestBody institutionRequest : ConversionRequest) : Mono<ConversionResponse> {
+        return conversionService.saveConversion(institutionRequest)
     }
 }

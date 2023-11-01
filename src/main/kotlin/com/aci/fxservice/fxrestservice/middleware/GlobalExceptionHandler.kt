@@ -7,11 +7,10 @@ import org.springframework.web.bind.annotation.ExceptionHandler
 
 @ControllerAdvice
 class GlobalExceptionHandler(private val logger: ILogger) {
-
+    val internalErrorMessage = "an error occurred, try again later"
     @ExceptionHandler(Exception::class)
     fun handleGlobalExceptions(e: Exception): ResponseEntity<String> {
-        logger.logError(e.message!!);
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("an error occurred, try again later")
+        logger.logError(e.message ?: internalErrorMessage);
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(internalErrorMessage)
     }
-
 }

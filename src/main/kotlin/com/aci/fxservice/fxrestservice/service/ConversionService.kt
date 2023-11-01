@@ -5,7 +5,7 @@ import com.aci.fxservice.fxrestservice.logging.ILogger
 import com.aci.fxservice.fxrestservice.model.response.ConversionResponse
 import com.aci.fxservice.fxrestservice.model.request.ConversionRequest
 import com.aci.fxservice.fxrestservice.repository.FxRateDataRepository
-import com.aci.fxservice.fxrestservice.repository.InstitutionRepository
+import com.aci.fxservice.fxrestservice.repository.ConversionRepository
 import org.springframework.stereotype.Service
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
@@ -15,43 +15,43 @@ import org.springframework.http.HttpStatus
 import org.springframework.web.server.ResponseStatusException
 
 @Service
-class InstitutionService(
-    private val institutionRepository: InstitutionRepository,
+class ConversionService(
+    private val conversionRepository: ConversionRepository,
     private val exchangeRateRepository: FxRateDataRepository,
     private val logger: ILogger,
 ) {
-    // find all institutions
-    fun findInstitutions() : Flux<ConversionResponse> {
-        logger.logInfo("Received request to find all institutions")
+    // find all conversions
+    fun findConversions() : Flux<ConversionResponse> {
+        logger.logInfo("Received request to find all conversions")
         // convert to dto after findAll
-        return institutionRepository
+        return conversionRepository
                 .findAll()
                 .map {  // convert to dto
-                    mapToInstitutionResponse(it)
+                    mapToconversionResponse(it)
                 }
     }
 
-    // find institution by id
-    fun findInstitutionById(id: Long) : Mono<ConversionResponse> {
-        logger.logInfo("Received request to find institution by id: $id")
+    // find conversion by id
+    fun findConversionById(id: Long) : Mono<ConversionResponse> {
+        logger.logInfo("Received request to find conversion by id: $id")
         // convert to dto after find
-        return institutionRepository.findById(id)
+        return conversionRepository.findById(id)
                 .map {
-                    mapToInstitutionResponse(it)
+                    mapToconversionResponse(it)
                 }
     }
 
-    // create institution
-    fun saveInstitution(institutionRequest: ConversionRequest) : Mono<ConversionResponse >{
-        logger.logInfo("Received request to save institution: $institutionRequest")
+    // create conversion
+    fun saveConversion(conversionRequest: ConversionRequest) : Mono<ConversionResponse >{
+        logger.logInfo("Received request to save conversion: $conversionRequest")
         // logic to convert the currency
         // get the exchange rates
-        val result = exchangeRateRepository.findFxRateDataByBaseCurrencyAndCurrency(institutionRequest.fromCurrency, institutionRequest.toCurrency)
+        val result = exchangeRateRepository.findFxRateDataByBaseCurrencyAndCurrency(conversionRequest.fromCurrency, conversionRequest.toCurrency)
             .switchIfEmpty(
                 Mono.error(
                     ResponseStatusException(
                         HttpStatus.BAD_REQUEST,
-                        "Unable to find exchange rate for ${institutionRequest.fromCurrency} to ${institutionRequest.toCurrency}"
+                        "Unable to find exchange rate for ${conversionRequest.fromCurrency} to ${conversionRequest.toCurrency}"
                     )
                 )
             )
@@ -62,18 +62,18 @@ class InstitutionService(
                      val rate = value.buyRate
                 logger.logInfo("Rate: $rate")
                     val targetAmount = convertCurrency(
-                            institutionRequest.amount,
-                            institutionRequest.fromCurrency,
-                            institutionRequest.toCurrency,
+                            conversionRequest.amount,
+                            conversionRequest.fromCurrency,
+                            conversionRequest.toCurrency,
                             mapOf(Pair(value.baseCurrency, value.currency) to value.buyRate)
                     )
 
-                    institutionRepository.save(
+                    conversionRepository.save(
                         Conversion(
-                            institutionId = generateRandomLongId(),
-                            sourceCurrency = institutionRequest.fromCurrency,
-                            targetCurrency = institutionRequest.toCurrency,
-                            amount = institutionRequest.amount,
+                            conversionId = generateRandomLongId(),
+                            sourceCurrency = conversionRequest.fromCurrency,
+                            targetCurrency = conversionRequest.toCurrency,
+                            amount = conversionRequest.amount,
                             targetAmount = targetAmount,
                             rate = rate,
                             initiatedOn = getCurrentEpochTime(),
@@ -81,7 +81,7 @@ class InstitutionService(
                             reason = "Initiated by user",
                         ))
                         .map{
-                            mapToInstitutionResponse(it)
+                            mapToconversionResponse(it)
                         }
                 }
                 .onErrorMap { error ->
@@ -111,15 +111,15 @@ class InstitutionService(
         }
     }
 }
-fun mapToInstitutionResponse(institution: Conversion): ConversionResponse {
+fun mapToconversionResponse(conversion: Conversion): ConversionResponse {
 
     return ConversionResponse(
-        institution.institutionId,
-        institution.amount,
-        institution.targetAmount,
-        institution.sourceCurrency,
-        institution.targetCurrency,
-        institution.initiatedOn,
-        institution.rate
+        conversion.conversionId,
+        conversion.amount,
+        conversion.targetAmount,
+        conversion.sourceCurrency,
+        conversion.targetCurrency,
+        conversion.initiatedOn,
+        conversion.rate
     )
 }

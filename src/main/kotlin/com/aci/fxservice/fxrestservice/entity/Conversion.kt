@@ -7,7 +7,7 @@ import org.springframework.data.mongodb.core.mapping.Document
 @Document
 data class Conversion(
         @Id
-        val institutionId: Long,
+        val conversionId: Long,
         val sourceCurrency: String,
         val targetCurrency: String,
         val initiatedOn: Long? = null,
