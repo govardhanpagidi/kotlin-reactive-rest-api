@@ -27,7 +27,7 @@ class ConversionService(
         return conversionRepository
                 .findAll()
                 .map {  // convert to dto
-                    mapToconversionResponse(it)
+                    mapToConversionResponse(it)
                 }
     }
 
@@ -37,7 +37,7 @@ class ConversionService(
         // convert to dto after find
         return conversionRepository.findById(id)
                 .map {
-                    mapToconversionResponse(it)
+                    mapToConversionResponse(it)
                 }
     }
 
@@ -81,7 +81,7 @@ class ConversionService(
                             reason = "Initiated by user",
                         ))
                         .map{
-                            mapToconversionResponse(it)
+                            mapToConversionResponse(it)
                         }
                 }
                 .onErrorMap { error ->
@@ -111,7 +111,8 @@ class ConversionService(
         }
     }
 }
-fun mapToconversionResponse(conversion: Conversion): ConversionResponse {
+
+fun mapToConversionResponse(conversion: Conversion): ConversionResponse {
 
     return ConversionResponse(
         conversion.conversionId,
