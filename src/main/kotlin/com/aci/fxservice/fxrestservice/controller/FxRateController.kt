@@ -2,7 +2,10 @@ package com.aci.fxservice.fxrestservice.controller
 
 import com.aci.fxservice.fxrestservice.model.response.ConversionResponse
 import com.aci.fxservice.fxrestservice.model.request.ConversionRequest
+import com.aci.fxservice.fxrestservice.model.request.FxRateRequest
+import com.aci.fxservice.fxrestservice.model.response.FxRateResponse
 import com.aci.fxservice.fxrestservice.service.ConversionService
+import com.aci.fxservice.fxrestservice.service.FxRateService
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -14,25 +17,16 @@ import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
 
 @RestController
-@RequestMapping("/conversions")
-class ConversionController (
-        private val conversionService: ConversionService
+@RequestMapping("/fxrates")
+class FxRateController (
+    private val fxRateService: FxRateService
 ){
     @GetMapping
-    fun findAll() : Flux<ConversionResponse> = conversionService.findConversions()
-
-    @GetMapping("/{id}")
-    fun findConversionById(@PathVariable id:Long) : Mono<ConversionResponse> = conversionService.findConversionById(id)
+    fun findAll() : Flux<FxRateResponse> = fxRateService.findFxRates()
 
     @PostMapping
-    fun doConversion(@RequestBody institutionRequest : ConversionRequest) : Mono<ConversionResponse> {
-        return conversionService.doConversion(institutionRequest)
+    fun doConversion(@RequestBody fxRateRequest : FxRateRequest) : Mono<FxRateResponse> {
+        return fxRateService.findFxRateById(fxRateRequest)
     }
-
-    @DeleteMapping
-    fun deleteAll() : Mono<Void> = conversionService.deleteAllConversions()
-
-    @DeleteMapping("/{id}")
-    fun deleteById(@PathVariable id:Long) : Mono<Void> = conversionService.deleteConversionById(id)
 
 }

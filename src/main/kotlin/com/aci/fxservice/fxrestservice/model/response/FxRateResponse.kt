@@ -1,12 +1,7 @@
-package com.aci.fxservice.fxrestservice.entity
-
-import org.bson.types.ObjectId
-import org.springframework.data.annotation.Id
+package com.aci.fxservice.fxrestservice.model.response
 import java.util.Date
-import org.springframework.data.mongodb.core.mapping.Document
-@Document(collection = "FxRateData")
-data class FxRateData(
-        @Id val id:ObjectId,
+
+data class FxRateResponse  (
         val tenantId: String,
         val bankId: String,
         val baseCurrency: String,
@@ -21,7 +16,3 @@ data class FxRateData(
         val expirationDate: Date?,
         val contractRequirementThreshold: String?
 )
-
-
-
-

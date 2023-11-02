@@ -1,6 +1,7 @@
 package com.aci.fxservice.fxrestservice.service
 
 import com.aci.fxservice.fxrestservice.entity.Conversion
+import com.aci.fxservice.fxrestservice.entity.FxRateKey
 import com.aci.fxservice.fxrestservice.logging.ILogger
 import com.aci.fxservice.fxrestservice.model.response.ConversionResponse
 import com.aci.fxservice.fxrestservice.model.request.ConversionRequest
@@ -18,7 +19,7 @@ import org.springframework.web.server.ResponseStatusException
 @Service
 class ConversionService(
     private val conversionRepository: ConversionRepository,
-    private val exchangeRateRepository: FxRateDataRepository,
+    private val fxRateDataRepository: FxRateDataRepository,
     private val logger: ILogger,
 ) {
     // find all conversions
@@ -47,7 +48,8 @@ class ConversionService(
         logger.logInfo("Received request to save conversion: $conversionRequest")
         // logic to convert the currency
         // get the exchange rates
-        val result = exchangeRateRepository.findFxRateDataByBaseCurrencyAndCurrency(conversionRequest.fromCurrency, conversionRequest.toCurrency)
+        val result = fxRateDataRepository.findFxRateDataByTenantIdAndBankIdAndBaseCurrencyAndCurrency(
+            conversionRequest.tenantId,conversionRequest.bankId, conversionRequest.fromCurrency, conversionRequest.toCurrency)
             .switchIfEmpty(
                 Mono.error(
                     ResponseStatusException(
@@ -66,7 +68,7 @@ class ConversionService(
                     conversionRequest.amount,
                     conversionRequest.fromCurrency,
                     conversionRequest.toCurrency,
-                    mapOf(Pair(value.baseCurrency, value.currency) to value.buyRate)
+                    mapOf(Pair(conversionRequest.fromCurrency, conversionRequest.toCurrency) to value.buyRate)
                 )
                 logger.logInfo("Target Amount: $targetAmount")
                 conversionRepository.save(
