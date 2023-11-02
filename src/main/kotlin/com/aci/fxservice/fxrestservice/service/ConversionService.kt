@@ -6,6 +6,7 @@ import com.aci.fxservice.fxrestservice.model.response.ConversionResponse
 import com.aci.fxservice.fxrestservice.model.request.ConversionRequest
 import com.aci.fxservice.fxrestservice.repository.FxRateDataRepository
 import com.aci.fxservice.fxrestservice.repository.ConversionRepository
+import com.aci.fxservice.fxrestservice.util.convertCurrency
 import org.springframework.stereotype.Service
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
@@ -25,10 +26,10 @@ class ConversionService(
         logger.logInfo("Received request to find all conversions")
         // convert to dto after findAll
         return conversionRepository
-                .findAll()
-                .map {  // convert to dto
-                    mapToConversionResponse(it)
-                }
+            .findAll()
+            .map {  // convert to dto
+                mapToConversionResponse(it)
+            }
     }
 
     // find conversion by id
@@ -36,13 +37,13 @@ class ConversionService(
         logger.logInfo("Received request to find conversion by id: $id")
         // convert to dto after find
         return conversionRepository.findById(id)
-                .map {
-                    mapToConversionResponse(it)
-                }
+            .map {
+                mapToConversionResponse(it)
+            }
     }
 
     // create conversion
-    fun saveConversion(conversionRequest: ConversionRequest) : Mono<ConversionResponse >{
+    fun doConversion(conversionRequest: ConversionRequest) : Mono<ConversionResponse >{
         logger.logInfo("Received request to save conversion: $conversionRequest")
         // logic to convert the currency
         // get the exchange rates
@@ -58,55 +59,44 @@ class ConversionService(
 
         return result
             .flatMap { value ->
-                    // Process the value and return the resulting Mono
-                     val rate = value.buyRate
+                // Process the value and return the resulting Mono
+                val rate = value.buyRate
                 logger.logInfo("Rate: $rate")
-                    val targetAmount = convertCurrency(
-                            conversionRequest.amount,
-                            conversionRequest.fromCurrency,
-                            conversionRequest.toCurrency,
-                            mapOf(Pair(value.baseCurrency, value.currency) to value.buyRate)
-                    )
-
-                    conversionRepository.save(
-                        Conversion(
-                            conversionId = generateRandomLongId(),
-                            fromCurrency = conversionRequest.fromCurrency,
-                            toCurrency = conversionRequest.toCurrency,
-                            amount = conversionRequest.amount,
-                            convertedAmount = targetAmount,
-                            rate = rate,
-                            initiatedOn = getCurrentEpochTime(),
-                        ))
-                        .map{
-                            mapToConversionResponse(it)
-                        }
-                }
-                .onErrorMap { error ->
-                    logger.logError("error: ${error.message}")
-                    Exception("Error occurred: ${error.message}")
-                }
-
-
+                val targetAmount = convertCurrency(
+                    conversionRequest.amount,
+                    conversionRequest.fromCurrency,
+                    conversionRequest.toCurrency,
+                    mapOf(Pair(value.baseCurrency, value.currency) to value.buyRate)
+                )
+                logger.logInfo("Target Amount: $targetAmount")
+                conversionRepository.save(
+                    Conversion(
+                        conversionId = generateRandomLongId(),
+                        fromCurrency = conversionRequest.fromCurrency,
+                        toCurrency = conversionRequest.toCurrency,
+                        amount = conversionRequest.amount,
+                        convertedAmount = targetAmount,
+                        rate = rate,
+                        initiatedOn = getCurrentEpochTime(),
+                    ))
+                    .map{
+                        mapToConversionResponse(it)
+                    }
+            }
+            .onErrorMap { error ->
+                logger.logError("error: ${error.message}")
+                Exception("Error occurred: ${error.message}")
+            }
     }
 
-    // currency conversion logic
-    fun convertCurrency(amount: Double, sourceCurrency: String, targetCurrency: String, exchangeRates: Map<Pair<String, String>, Double>): Double {
-        val exchangeRate = exchangeRates[Pair(sourceCurrency, targetCurrency)]
+    fun deleteConversionById(id: Long) : Mono<Void> {
+        logger.logInfo("Received request to delete conversion by id: $id")
+        return conversionRepository.deleteById(id)
+    }
 
-        return if (exchangeRate != null) {
-            amount * exchangeRate
-        } else {
-            // If the direct exchange rate isn't available, try the reverse conversion
-            val reverseExchangeRate = exchangeRates[Pair(targetCurrency, sourceCurrency)]
-            if (reverseExchangeRate != null) {
-                amount / reverseExchangeRate
-            } else {
-                // If exchange rate is not found in either direction, return 0 indicating conversion failure
-                logger.logWarn("Unable to find exchange rate for $sourceCurrency to $targetCurrency")
-                0.0
-            }
-        }
+    fun deleteAllConversions() : Mono<Void> {
+        logger.logInfo("Received request to delete all conversions")
+        return conversionRepository.deleteAll()
     }
 }
 
