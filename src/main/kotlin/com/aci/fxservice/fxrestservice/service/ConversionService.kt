@@ -71,14 +71,12 @@ class ConversionService(
                     conversionRepository.save(
                         Conversion(
                             conversionId = generateRandomLongId(),
-                            sourceCurrency = conversionRequest.fromCurrency,
-                            targetCurrency = conversionRequest.toCurrency,
+                            fromCurrency = conversionRequest.fromCurrency,
+                            toCurrency = conversionRequest.toCurrency,
                             amount = conversionRequest.amount,
-                            targetAmount = targetAmount,
+                            convertedAmount = targetAmount,
                             rate = rate,
                             initiatedOn = getCurrentEpochTime(),
-                            status = "Initiated",
-                            reason = "Initiated by user",
                         ))
                         .map{
                             mapToConversionResponse(it)
@@ -117,9 +115,9 @@ fun mapToConversionResponse(conversion: Conversion): ConversionResponse {
     return ConversionResponse(
         conversion.conversionId,
         conversion.amount,
-        conversion.targetAmount,
-        conversion.sourceCurrency,
-        conversion.targetCurrency,
+        conversion.convertedAmount,
+        conversion.fromCurrency,
+        conversion.toCurrency,
         conversion.initiatedOn,
         conversion.rate
     )

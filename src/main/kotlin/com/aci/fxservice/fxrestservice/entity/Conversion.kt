@@ -8,15 +8,12 @@ import org.springframework.data.mongodb.core.mapping.Document
 data class Conversion(
         @Id
         val conversionId: Long,
-        val sourceCurrency: String,
-        val targetCurrency: String,
+        val fromCurrency: String,
+        val toCurrency: String,
         val initiatedOn: Long? = null,
-        val settledCn: Long? = null,
         val amount: Double,
-        val targetAmount: Double? = null,
+        val convertedAmount: Double? = null,
         val rate: Double,
-        val status: String,
-        val reason: String? = null,
 ){
 
 
