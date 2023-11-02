@@ -4,7 +4,7 @@ import org.bson.types.ObjectId
 import org.springframework.data.annotation.Id
 import java.util.Date
 import org.springframework.data.mongodb.core.mapping.Document
-@Document(collection = "FxRateData")
+@Document(collection = "fx_rate_data")
 data class FxRateData(
         @Id val id:ObjectId,
         val tenantId: String,

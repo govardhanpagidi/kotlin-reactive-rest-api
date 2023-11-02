@@ -17,7 +17,7 @@ class FxRateService(
 ) {
     // find all conversions
     fun findFxRates() : Flux<FxRateResponse> {
-        logger.logInfo("Received request to find all conversions")
+        logger.logInfo("Received request to find all FxRates")
         // convert to dto after findAll
         return fxRateDataRepository
             .findAll()
@@ -28,7 +28,7 @@ class FxRateService(
 
     // find conversion by id
     fun findFxRateById(request: FxRateRequest) : Mono<FxRateResponse> {
-        logger.logInfo("Received request to find conversion by id: $request")
+        logger.logInfo("Received request to find FxRate by id: $request")
         // convert to dto after find
         return fxRateDataRepository.findFxRateDataByTenantIdAndBankIdAndBaseCurrencyAndCurrency(
            request.tenantId,
@@ -41,7 +41,13 @@ class FxRateService(
             }
     }
 
-
+    fun saveFxRate(fxRate: FxRateData): Mono<FxRateResponse> {
+        logger.logInfo("Received request to save FxRate: $fxRate")
+        return fxRateDataRepository.save(fxRate)
+            .map {
+                mapToFxRateResponse(it)
+            }
+    }
 }
 
 fun mapToFxRateResponse(fxRate: FxRateData): FxRateResponse {
