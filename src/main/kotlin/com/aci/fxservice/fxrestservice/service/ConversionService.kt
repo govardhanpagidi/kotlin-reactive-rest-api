@@ -44,7 +44,7 @@ class ConversionService(
     }
 
     // create conversion
-    fun doConversion(conversionRequest: ConversionRequest) : Mono<ConversionResponse >{
+    fun doConversion(conversionRequest: ConversionRequest) : Flux<ConversionResponse >{
         logger.logInfo("Received request to save conversion: $conversionRequest")
         // logic to convert the currency
         // get the exchange rates
@@ -57,7 +57,7 @@ class ConversionService(
                         "Unable to find exchange rate for ${conversionRequest.fromCurrency} to ${conversionRequest.toCurrency}"
                     )
                 )
-            )
+            ).take(1)
 
         return result
             .flatMap { value ->

@@ -1,7 +1,7 @@
 package com.aci.fxservice.fxrestservice.model.response
 import java.util.Date
 
-data class FxRateResponse  (
+data class FxDataResponse  (
         val tenantId: Int,
         val bankId: Int,
         val baseCurrency: String,
@@ -12,7 +12,7 @@ data class FxRateResponse  (
         val buyRate: Double,
         val sellRate: Double,
         val tolerancePercentage: Int?,
-        val effectiveDate: String?,
-        val expirationDate: String?,
+        val effectiveDate: Date?,
+        val expirationDate: Date?,
         val contractRequirementThreshold: String?
 )
