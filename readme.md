@@ -1,7 +1,7 @@
 # Spring boot Reactive API using Kotlin
 
 
-[![Build Status](https://travis-ci.com/govardhanpagidi/repository.svg?branch=main)](https://travis-ci.com/govardhanpagidi/kotlin-reactive-rest-api)
+![build.yaml](https://github.com/govardhanpagidi/kotlin-reactive-rest-api/actions/workflows/workflow-file.yml/badge.svg)
 
 
 * Uses mongodb as database
