@@ -1,8 +1,7 @@
 # Spring boot Reactive API using Kotlin
 
 
-![.github/workflows/build.yaml](https://github.com/govardhanpagidi/kotlin-reactive-rest-api/actions/workflows/workflow-file.yml/badge.svg)
-
+![Build](https://github.com/govardhanpagidi/kotlin-reactive-rest-api/actions/workflows/build.yml/badge.svg)
 
 * Uses mongodb as database
   * REST api for CRUD operations on a Fx Rate Conversions
