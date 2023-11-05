@@ -1,7 +1,7 @@
 # Spring boot Reactive API using Kotlin
 
 
-[![Build Status](https://travis-ci.com/govardhanpagidi/kotlin-reactive-rest-api.svg?branch=main)](https://travis-ci.com/govardhanpagidi/kotlin-reactive-rest-api)
+[![Build Status](https://travis-ci.com/govardhanpagidi/repository.svg?branch=main)](https://travis-ci.com/govardhanpagidi/kotlin-reactive-rest-api)
 
 
 * Uses mongodb as database
