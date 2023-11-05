@@ -2,6 +2,8 @@
 
 
 ![Build](https://github.com/govardhanpagidi/kotlin-reactive-rest-api/actions/workflows/build.yml/badge.svg)
+![Code Health](https://github.com/govardhanpagidi/kotlin-reactive-rest-api/actions/workflows/lint.yml/badge.svg)
+
 
 * Uses mongodb as database
   * REST api for CRUD operations on a Fx Rate Conversions
