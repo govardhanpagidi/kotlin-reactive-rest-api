@@ -1,0 +1,31 @@
+name: Snyk Security Check
+
+on:
+  push:
+    branches:
+      - main  # Adjust to your primary branch
+  pull_request:
+    branches:
+      - main  # Adjust to your primary branch
+
+jobs:
+  snyk:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+
+      - name: Install Snyk CLI
+        run: npm install -g snyk
+
+      - name: Authenticate Snyk
+        run: snyk auth ${{ secrets.SNYK_API_TOKEN }}  # Store your Snyk API token as a secret
+
+      - name: Run Snyk Test
+        run: snyk test --all-projects --severity-threshold=high  # Adjust severity threshold as needed
